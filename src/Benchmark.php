@@ -109,7 +109,11 @@ class Benchmark {
 //    }
 
     public static function run($engine, $template, $data, $double, $message) {
-        passthru(sprintf(PHP_BINARY." -n -ddate.timezone=Europe/Moscow -dmemory_limit=512M %s/engine.php --engine '%s' --template '%s' --data '%s' --message '%s' %s --stress %d %s", self::$bin_path, $engine, $template, $data, $message, $double ? '--double' : '', self::$stress, self::$auto_reload ? '--auto_reload' : ''));
+        if (getenv('TRAVIS')) {
+            passthru(sprintf("$(phpenv which php) -n -ddate.timezone=Europe/Moscow -dmemory_limit=512M %s/engine.php --engine '%s' --template '%s' --data '%s' --message '%s' %s --stress %d %s", self::$bin_path, $engine, $template, $data, $message, $double ? '--double' : '', self::$stress, self::$auto_reload ? '--auto_reload' : ''));
+        } else {
+            passthru(sprintf(PHP_BINARY." -n -ddate.timezone=Europe/Moscow -dmemory_limit=512M %s/engine.php --engine '%s' --template '%s' --data '%s' --message '%s' %s --stress %d %s", self::$bin_path, $engine, $template, $data, $message, $double ? '--double' : '', self::$stress, self::$auto_reload ? '--auto_reload' : ''));
+        }
     }
 
     /**
